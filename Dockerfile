@@ -1,0 +1,1 @@
+FROM quay.io/astronomer/astro-runner:8.5.0
