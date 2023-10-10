@@ -1,1 +1,1 @@
-buid-essential
+build-essential
