@@ -17,10 +17,11 @@ import global_variables.constants as c
 city_name = uv.MY_CITY
 user_name = uv.MY_NAME
 hot_day = uv.HOT_DAY
+ticker = uv.TICKER
 
 
 duck_db_instance_path = (
-    "/app/include/dwh"  # when changing this value also change the db name in .env
+    "./include/dwh"  # when changing this value also change the db name in .env
 )
 global_temp_col = "Global"
 metric_col_name = "Average Surface Temperature"
@@ -109,6 +110,21 @@ def get_hot_days(db=duck_db_instance_path):
     df = pd.DataFrame(hot_days_data, columns=[x[0] for x in hot_days_col_names])
     return df
 
+# -----market cap---------- #
+def get_ticker_data(db=duck_db_instance_path):
+    cursor = duckdb.connect(db)
+
+    ticker_col_names = cursor.execute(
+        f"""SELECT column_name from information_schema.columns where table_name = '{c.REPORT_MARKET_DEPTH_TABLE_NAME}';"""
+    ).fetchall()
+
+    ticker_data = cursor.execute(
+        f"""SELECT * FROM {c.REPORT_MARKET_DEPTH_TABLE_NAME};"""
+    ).fetchall()
+    cursor.close()
+
+    df = pd.DataFrame(ticker_data, columns=[x[0] for x in ticker_col_names])
+    return df
 
 # ------------ #
 # Query DuckDB #
@@ -137,9 +153,39 @@ if c.REPORT_HISTORICAL_WEATHER_TABLE_NAME in tables:
 if c.REPORT_HOT_DAYS_TABLE_NAME in tables:
     hot_days_table = get_hot_days()
 
+if c.REPORT_MARKET_DEPTH_TABLE_NAME in tables:
+    ticker_table = get_ticker_data()
+
 # ------------- #
 # STREAMLIT APP #
 # ------------- #
+
+
+# -------------------- #
+# Stock Market section #
+# -------------------- #
+
+st.title("Stock Dashboard")
+
+st.markdown(f"Hello {user_name} :wave: Welcome to your Streamlit App! :blush:")
+
+st.subheader(f"Stock Market {ticker}")
+
+if c.REPORT_MARKET_DEPTH_TABLE_NAME in tables:
+    if len(ticker_table.ticker.unique()) == 1:
+        st.markdown(
+            """
+            By default the graph below will show the market depth for the ticker AAPL.
+            Complete exercise 4 to use dynamic task mapping to retrieve market depth information from list of tickers of your choosing that will populate the 
+            dropdown menu.
+            """
+        )
+    st.line_chart(ticker_table, x="date", y="amount")
+    st.write(ticker_table)
+
+# --------------- #
+# Climate section #
+# --------------- #
 
 st.title("Climate and Weather Dashboard")
 

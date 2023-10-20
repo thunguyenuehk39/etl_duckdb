@@ -7,6 +7,7 @@ import logging
 import os
 from pendulum import duration
 import json
+import datetime
 
 # ----------------------- #
 # Configuration variables #
@@ -15,6 +16,10 @@ import json
 # Source files climate data
 CLIMATE_DATA_PATH = (
     f"{os.environ['AIRFLOW_HOME']}/include/climate_data/global_climate_data.csv"
+)
+
+MARKET_DEPTH_DATA_PATH = (
+    f"{os.environ['AIRFLOW_HOME']}/include/market_depth_data/market_depth_data.csv"
 )
 
 # Datasets
@@ -38,3 +43,5 @@ default_args = {
 
 # default coordinates
 default_coordinates = {"city": "No city provided", "lat": 0, "long": 0}
+# default stock data
+default_stock_data = {"maket": "HOSE", "date": datetime.datetime.now()}

@@ -16,7 +16,7 @@ from astro.sql.table import Table
 # Local module imports #
 # -------------------- #
 
-from include.global_variables import airflow_conf_varibles as gv
+from include.global_variables import airflow_conf_variables as gv
 from include.global_variables import user_input_variables as uv
 from include.global_variables import constants as c
 

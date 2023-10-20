@@ -47,6 +47,17 @@ def get_current_weather_from_city_coordinates(coordinates, timestamp):
                 city, current_weather["temperature"]
             )
         )
+        data = {
+            "city": city,
+            "lat": lat,
+            "long": long,
+            "temperature": current_weather["temperature"],
+            "windspeed": current_weather["windspeed"],
+            "winddirection": current_weather["winddirection"],
+            "weathercode": current_weather["weathercode"],
+            "time": f"{timestamp}",
+            "API_response": r.status_code,
+        }
 
     # if the API call is not successful, log a warning
     else:
